@@ -1,0 +1,64 @@
+spring:
+  application:
+    name: /worker-avro-cancelamento-venda-converter
+  main:
+    banner-mode: 'OFF'
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP-SERVERS}
+    properties:
+      schema:
+        registry:
+          url: ${SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL}
+    listener:
+      concurrency: 8
+    consumer:
+      group-id: worker-avro-cancelamento-venda-converter-group
+      auto-offset-reset: earliest
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: io.cloudevents,br.com.mac,*
+      inbound-payload-topic: topic-conn-cancelamento-venda
+    producer:
+      client-id: worker-avro-cancelamento-venda-converter-client-1
+      retries: 3
+      acks: 1
+      outbound-payload-topic: topic-cancelamento-venda
+      outbound-schema-id: ${SPRING_PRODUCER_OUTBOUND-SCHEMA-ID}
+      outbound-event-type: cancelamento-venda
+
+mac:
+  kafka:
+    consumer:
+      mode: MAIN
+      support-cloud-events: false
+    producer:
+      support-cloud-events: true
+      dlq:
+        support-cloud-events: false
+    errors:
+      retry:
+        topic:
+          name: topic-conn-cancelamento-venda-retry
+        attempts: 0
+        wait-seconds: 0
+      deadletterqueue:
+        topic:
+          name: topic-conn-cancelamento-venda-dlq
+      tolerance:
+        level: ALL #NONE/ALL#
+  avro:
+    converter:
+      mapping:
+        file: /opt/mac/field-mapping.json
+
+logging:
+  level:
+    ROOT: ${LOGGING_LEVEL_ROOT} #QA=DEBUG; STAGING=DEBUG; PROD=INFO
+    br:
+      com:
+        mac: ${LOGGING_BR_COM_mac} #QA=DEBUG; STAGING=DEBUG; PROD=INFO
+server:
+  port: ${SERVER_PORT}
+

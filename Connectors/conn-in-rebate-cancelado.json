@@ -1,0 +1,75 @@
+{
+    "name": "conn-in-rebate-cancelado",
+    "config": {
+      "version": 1,
+      "description": "Conector de entrada de dados referente ao rebate cancelado",
+      "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+      "connection.url": "jdbc:sqlserver://10.1.1.1:1433;databaseName=Adquirente;selectMethod=cursor",
+      "connection.user": "confluent_Machina_login",
+      "connection.passingthroughportalword": "Machina-Pawword",
+      "topic.prefix": "topic-conn-conf-rebate-cancelado",
+      "poll.interval.ms": "60000",
+      "mode": "timestamp",
+      "timestamp.column.name": "dt_movimento",
+      "timestamp.initial": "-1",
+      "validate.non.null": "true",
+      "query": "SELECT  *\nFROM\n(\n\tSELECT  DISTINCT \n\t\t\tbe.Id_Boleto                          AS id_boleto\n\t       ,CAST(be.ValorRebate AS NUMERIC(15,2)) AS valor\n\t       ,be.DataEmissao                        AS dt_movimento\n\tFROM arquivocargastd arq\n\tINNER JOIN CargasMachina cb\n\tON cb.ID_ARQUIVOCARGASTD = arq.ID_ARQUIVOCARGASTD\n\tINNER JOIN CargaControleFinanceiro cf\n\tON cf.Id_CargaControleFinanceiro = cb.Id_CargaControleFinanceiro\n\tINNER JOIN BoletosEmitidos be\n\tON be.Id_Boleto = cf.Id_Boleto\n\tWHERE cb.status <> 6\n\tAND ARQ.STATUS IN (3, 4, 5, 6)\n\tAND BE.ValorRebate > 0\n\tAND CB.DataCancelamento IS NOT NULL\n) AS RebateCancelado",
+      "key.converter.schema.registry.url": "https://m5-achi-naa.us-east-2.aws.confluent.cloud",
+      "value.converter.schema.registry.url": "https://m5-achi-naa.us-east-2.aws.confluent.cloud",
+      "value.converter.schema.registry.basic.auth.user.info": "Machina-Pawword",
+      "key.converter.schema.registry.basic.auth.user.info": "Machina-Pawword",
+      "auto.register.schemas": "true",
+      "transforms": "createKey,extractInt,setSchemaName",
+      "transforms.createKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
+      "transforms.createKey.fields": "id_boleto",
+      "transforms.extractInt.type": "org.apache.kafka.connect.transforms.ExtractField$Key",
+      "transforms.extractInt.field": "id_boleto",
+      "transforms.setSchemaName.type": "org.apache.kafka.connect.transforms.SetSchemaMetadata$Value",
+      "transforms.setSchemaName.schema.name": "br.com.Machina.schema.ConnConfirmacaoRebateCanceladoValue",
+      "key.converter": "io.confluent.connect.avro.AvroConverter",
+      "value.converter": "io.confluent.connect.avro.AvroConverter",
+      "value.converter.basic.auth.credentials.source": "USER_INFO",
+      "key.converter.basic.auth.credentials.source": "USER_INFO"
+    }
+  }
+
+
+
+  [ec2-user@ip-172-22-33-216 ~]$ curl -X GET http://localhost:8083/connectors/conn-in-rebate-cancelado/config | jq
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  2419  100  2419    0     0   472k      0 --:--:-- --:--:-- --:--:--  472k
+{
+  "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+  "timestamp.column.name": "dt_movimento",
+  "transforms.createKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
+  "connection.passingthroughportalword": "Machina-Pawword",
+  "auto.register.schemas": "true",
+  "value.converter.schema.registry.basic.auth.user.info": "Machina-Pawword",
+  "transforms": "createKey,extractInt,setSchemaName",
+  "description": "Conector de entrada de dados referente ao rebate cancelado",
+  "value.converter.basic.auth.credentials.source": "USER_INFO",
+  "mode": "timestamp",
+  "topic.prefix": "topic-conn-conf-rebate-cancelado",
+  "transforms.createKey.fields": "id_boleto",
+  "poll.interval.ms": "60000",
+  "value.converter": "io.confluent.connect.avro.AvroConverter",
+  "transforms.setSchemaName.schema.name": "br.com.Machina.schema.ConnConfirmacaoRebateCanceladoValue",
+  "key.converter": "io.confluent.connect.avro.AvroConverter",
+  "validate.non.null": "true",
+  "timestamp.initial": "-1",
+  "query": "SELECT  *\nFROM\n(\n\tSELECT  DISTINCT \n\t\t\tbe.Id_Boleto                          AS id_boleto\n\t       ,CAST(be.ValorRebate AS NUMERIC(15,2)) AS valor\n\t       ,be.DataEmis
+sao                        AS dt_movimento\n\tFROM arquivocargastd arq\n\tINNER JOIN CargasMachina cb\n\tON cb.ID_ARQUIVOCARGASTD = arq.ID_ARQUIVOCARGASTD\n\tINNER JOIN CargaControleFinan
+ceiro cf\n\tON cf.Id_CargaControleFinanceiro = cb.Id_CargaControleFinanceiro\n\tINNER JOIN BoletosEmitidos be\n\tON be.Id_Boleto = cf.Id_Boleto\n\tWHERE cb.status <> 6\n\tAND ARQ.STATUS IN (
+3, 4, 5, 6)\n\tAND BE.ValorRebate > 0\n\tAND CB.DataCancelamento IS NOT NULL\n) AS RebateCancelado",
+  "transforms.extractInt.type": "org.apache.kafka.connect.transforms.ExtractField$Key",
+  "version": "1",
+  "transforms.setSchemaName.type": "org.apache.kafka.connect.transforms.SetSchemaMetadata$Value",
+  "value.converter.schema.registry.url": "https://machina-aws-clusters.us-east-2.aws.confluent.cloud",
+  "transforms.extractInt.field": "id_boleto",
+  "connection.user": "confluent_Machina_login",
+  "name": "conn-in-rebate-cancelado",
+  "key.converter.schema.registry.basic.auth.user.info": "Machina-Pawword",
+  "connection.url": "jdbc:sqlserver://10.1.1.1:1433;databaseName=Blue;selectMethod=cursor",
+  "key.converter.schema.registry.url": "https://machina-aws-clusters.us-east-2.aws.confluent.cloud",
+  "key.converter.basic.auth.credentials.source": "USER_INFO"

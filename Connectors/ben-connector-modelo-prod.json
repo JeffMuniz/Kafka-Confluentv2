@@ -1,0 +1,86 @@
+curl -s -H "Content-Type: application/json" -X POST -d @conn-in-relatorio-pedido.json  http://localhost:8083/connectors/ | jq
+vim conn-in-relatorio-pedido.json
+curl -s -H "Content-Type: application/json" -X POST -d @conn-in-relatorio-pedido.json  http://localhost:8083/connectors/ | jq
+curl -X DELETE http://localhost:8083/connectors/conn-in-relatorio-pedido | jq
+
+Logs
+tail -f /opt/confluent-kafka/confluent-5.5.1/logs/connect.log
+tail -f /opt/confluent-kafka/confluent-5.5.1/logs/connect.log | grep -i relatorio
+cd TASK-374/
+mv /tmp/{conn-in-count-relatorio-pedido.json,conn-in-relatorio-pedido.json,conn-out-count-relatorio-pedido.json,conn-out-relatorio-pedido.json} .
+
+
+
+
+curl -X GET http://localhost:8083/connectors/conn-out-relatorio-pedido-v2/status | jq
+curl -X GET http://localhost:8083/connectors/conn-in-count-relatorio-pedido-v2/status | jq
+curl -X GET http://localhost:8083/connectors/conn-out-count-relatorio-pedido-v2/status | jq
+curl -X DELETE http://localhost:8083/connectors/conn-in-relatorio-pedido-v2 | jq
+curl -X DELETE http://localhost:8083/connectors/conn-out-relatorio-pedido-v2 | jq
+curl -X DELETE http://localhost:8083/connectors/conn-in-count-relatorio-pedido-v2 | jq
+curl -X DELETE http://localhost:8083/connectors/conn-out-count-relatorio-pedido-v2 | jq
+history | grep -i POST
+
+Modelo de connector abaixo
+conn-in-bi-ajuste-financeiro-conciliacao.json
+
+curl -s -H "Content-Type: application/json" -X POST -d @conn-in-count-relatorio-pedido.json  http://localhost:8083/connectors/ | jq
+curl -X GET http://localhost:8083/connectors/ | grep relatorio
+c{
+  "name": "conn-in-bi-ajuste-financeiro-conciliacao",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+    "timestamp.column.name": "DATA_HORA",
+    "incrementing.column.name": "ID_AJUSTE",
+    "transforms.createKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
+    "connection.passingthroughportalword": "some-passingthroughportalword",
+    "transforms": "createKey,extractInt",
+    "value.converter.schema.registry.basic.auth.user.info": "Q4FE6BV5B6TUPEKI:f6BQNuTDyq6rzgzrvwWrDAZASpd0OiU8+OZ0wCiSfUdhROVkoGNcp3z3TCZsXxMP",
+    "description": "Conector de entrada de dados transacional referente aos ajustes financeiros realizados",
+    "internal.key.converter.schemas.enable": "true",
+    "value.converter.basic.auth.credentials.source": "USER_INFO",
+    "mode": "timestamp+incrementing",
+    "topic.prefix": "topic-core-ajuste-financeiro-conciliacao",
+    "transforms.createKey.fields": "ID_AJUSTE",
+    "poll.interval.ms": "15000",
+    "incrementing.offset": "0",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "timestamp.offset": "0",
+    "key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "validate.non.null": "true",
+    "query": "SELECT * FROM( SELECT EEA.Id_EventoAjuste AS ID_AJUSTE, EEA.DataMovimento AS DATA_HORA, PF.CPF AS CPF, TRC.Id_SetupContabil AS NM_SETUP_CONTABIL
+, PF.Nome AS DC_PORTADOR, A.Nome AS DC_ADQUIRENTE, TA.Id_Ajuste AS CD_AJUSTE, EEC.Id_EventoCompra AS CD_TRANSACAO, EEC.Id_Estabelecimento AS CD_ESTABELECIMENT
+O_COMERCIAL, PF.Id_PessoaFisica AS CD_PORTADOR, C.Id_Produto AS CD_PRODUTO, EEC.DataCompra AS DT_TRANSACAO, E.Nome AS DC_ESTABELECIMENTO_COMERCIAL, TA.Descric
+ao AS DC_MOTIVO_AJUSTE, EEA.DataOrigem AS DT_GERACAO_AJUSTE, IIF(TA.FlagCredito = 1, EEA.Valor, NULL) AS VL_CREDITO_AJUSTE, IIF(TA.FlagCredito = 0, EEA.Valor,
+ NULL) AS VL_DEBITO_AJUSTE, EEC.ValorCompra AS VL_TRANSACAO FROM EventosExternosAjustes EEA (NOLOCK) INNER JOIN TiposAjustes TA (NOLOCK) ON EEA.Id_TipoAjuste 
+= TA.Id_Ajuste INNER JOIN Contas C (NOLOCK) ON EEA.Id_Conta = C.Id_Conta INNER JOIN PessoasFisicas PF (NOLOCK) ON C.Id_Pessoa = PF.Id_PEssoaFisica INNER JOIN 
+TiposRelatoriosContabeis TRC (NOLOCK) ON TRC.TipoValor = 'Valor de pagamento' LEFT JOIN EventosExternosCompras EEC (NOLOCK) ON EEA.Id_EventoExternoOriginal = 
+EEC.Id_EventoCompra LEFT JOIN Adquirentes A (NOLOCK) ON EEC.Id_Adquirente = A.Id_Adquirente LEFT JOIN Estabelecimentos E (NOLOCK) ON EEC.Id_Estabelecimento = 
+E.Id_Estabelecimento WHERE EEA.Status = 2 AND TA.id_Ajuste in (633, 610, 5, 368, 369, 1052) AND EEA.TipoEventoExternoOriginal = 'COMPRA' AND ((TRC.Id_Relatori
+o = 35 AND TA.FlagCredito = 0) OR (TRC.Id_Relatorio = 34 AND TA.FlagCredito = 1))) AS AJUSTE",
+    "producer.buffer.memory": "26843545",
+    "transforms.extractInt.type": "org.apache.kafka.connect.transforms.ExtractField$Key",
+    "offset.flush.timeout.ms": "6000",
+    "version": "1",
+    "offset.flush.interval.ms": "30000",
+    "internal.key.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "value.converter.schema.registry.url": "https://psrc-em82q.us-east-2.aws.confluent.cloud",
+    "transforms.extractInt.field": "ID_AJUSTE",
+    "connection.user": "confluent_mac_login",
+    "internal.value.converter.schemas.enable": "true",
+    "internal.value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "name": "conn-in-bi-ajuste-financeiro-conciliacao",
+    "key.converter.schema.registry.basic.auth.user.info": "Q4FE6BV5B6TUPEKI:f6BQNuTDyq6rzgzrvwWrDAZASpd0OiU8+OZ0wCiSfUdhROVkoGNcp3z3TCZsXxMP",
+    "connection.url": "jdbc:sqlserver://10.50.131.85:1433;databaseName=Blue",
+    "key.converter.schema.registry.url": "https://psrc-em82q.us-east-2.aws.confluent.cloud",
+    "quote.sql.identifiers": "NEVER",
+    "key.converter.basic.auth.credentials.source": "USER_INFO"
+  },
+  "tasks": [
+    {
+      "connector": "conn-in-bi-ajuste-financeiro-conciliacao",
+      "task": 0
+    }
+  ],
+  "type": "source"
+}

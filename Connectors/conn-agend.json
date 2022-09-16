@@ -1,0 +1,53 @@
+ "name": "conn-in-agendamento-pedido",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+    "timestamp.column.name": "dt_movimento",
+    "transforms.createKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
+    "connection.password": "9D8?m>?q/2>$lQm",
+    "auto.register.schemas": "true",
+    "value.converter.schema.registry.basic.auth.user.info": "Q4FE6BV5B6TUPEKI:f6BQNuTDyq6rzgzrvwWrDAZASpd0OiU8+OZ0wCiSfUdhROVkoGNcp3z3TCZsXxMP",
+    "transforms": "createKey,extractInt,setSchemaName",
+    "description": "Conector de entrada de dados referente a Agendamento Pedido",
+    "value.converter.basic.auth.credentials.source": "USER_INFO",
+    "mode": "timestamp",
+    "topic.prefix": "topic-conn-conf-agendamento-pedido",
+    "transforms.createKey.fields": "id_boleto",
+    "db.timezone": "America/Sao_Paulo",
+    "poll.interval.ms": "300000",
+    "value.converter": "io.confluent.connect.avro.AvroConverter",
+    "transforms.setSchemaName.schema.name": "br.com.mac.schema.ConnConfirmacaoAgendamentoPedidoValue",
+    "key.converter": "io.confluent.connect.avro.AvroConverter",
+    "validate.non.null": "true",
+    "timestamp.initial": "-1",
+    "query": "SELECT\n\t*\nFROM\n\t(\n\tSELECT\n\t\tCast(be.id_boleto as INT) AS id_boleto,\n\t\tCAST(be.valorboleto AS NUMERIC(15,2)) AS valor,\n\t\tcargasbe
+neficiosnaopendentecredito.dt_processamento AS dt_movimento,\n\t\tbe.dataemissao as dt_emissao,\n\t\tCast(cb_status as INT) as cb_status,\n\t\tcast(arq_status
+ as INT) as arq_status\n\tFROM\n\t\t(\n\t\tSELECT\n\t\t\tarquivocargastdnaocanceladas.id_arquivocargastd,\n\t\t\tcb.id_cargacontrolefinanceiro,\n\t\t\t(\n\t\t
+\tCASE\n\t\t\t\tWHEN arquivocargastdnaocanceladas.dataprocessamento IS NOT NULL THEN arquivocargastdnaocanceladas.dataprocessamento\n\t\t\t\tELSE cb.dataproce
+ssamento\n\t\t\tEND ) AS dt_processamento,\n\t\t\tcb.status as cb_status,\n\t\t\tarq_status\n\t\tFROM\n\t\t\t(\n\t\t\tSELECT\n\t\t\t\tarq.id_arquivocargastd,\
+n\t\t\t\t(case when arq.dataprocessamento > isnull(arq.dataconfirmacao, 0) then arq.dataprocessamento\n\t\t\t\telse arq.dataconfirmacao\n\t\t\t\tend) as datap
+rocessamento,\n\t\t\t\tarq.status as arq_status\n\t\t\tFROM\n\t\t\t\tarquivocargastd arq (nolock)\n\t\t\tWHERE\n\t\t\t\tarq.status < 7 ) AS arquivocargastdnao
+canceladas\n\t\tINNER JOIN cargasmaceficios cb (nolock) ON\n\t\t\tcb.id_arquivocargastd = arquivocargastdnaocanceladas.id_arquivocargastd\n\t\tWHERE\n\t\t\tcb
+.status NOT IN (6) ) AS cargasmaceficiosnaopendentecredito\n\tINNER JOIN cargacontrolefinanceiro cf (nolock) ON\n\t\tcf.id_cargacontrolefinanceiro = cargasmac
+eficiosnaopendentecredito.id_cargacontrolefinanceiro\n\tINNER JOIN boletosemitidos be (nolock) ON\n\t\tbe.id_boleto = cf.id_boleto\n\tGROUP BY\n\t\tbe.id_bole
+to,\n\t\tbe.valorboleto,\n\t\tcargasmaceficiosnaopendentecredito.dt_processamento,\n\t\tbe.dataemissao,\n\t\tcb_status,\n\t\tarq_status) agendamentopedido",
+    "transforms.extractInt.type": "org.apache.kafka.connect.transforms.ExtractField$Key",
+    "timestamp.delay.interval.ms": "300000",
+    "version": "1",
+    "transforms.setSchemaName.type": "org.apache.kafka.connect.transforms.SetSchemaMetadata$Value",
+    "value.converter.schema.registry.url": "https://psrc-em82q.us-east-2.aws.confluent.cloud",
+    "transforms.extractInt.field": "id_boleto",
+    "connection.user": "confluent_mac_login",
+    "name": "conn-in-agendamento-pedido",
+    "key.converter.schema.registry.basic.auth.user.info": "Q4FE6BV5B6TUPEKI:f6BQNuTDyq6rzgzrvwWrDAZASpd0OiU8+OZ0wCiSfUdhROVkoGNcp3z3TCZsXxMP",
+    "connection.url": "jdbc:sqlserver://10.50.131.85:1433;databaseName=Blue",
+    "key.converter.schema.registry.url": "https://psrc-em82q.us-east-2.aws.confluent.cloud",
+    "key.converter.basic.auth.credentials.source": "USER_INFO"
+  },
+  "tasks": [
+    {
+      "connector": "conn-in-agendamento-pedido",
+      "task": 0
+    }
+  ],
+  "type": "source"
+}

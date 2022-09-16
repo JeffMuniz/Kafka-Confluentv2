@@ -1,0 +1,90 @@
+{
+    "fields": [
+        {
+            "name": "id",
+            "type": "string"
+        },
+        {
+            "name": "source",
+            "type": "string"
+        },
+        {
+            "name": "specversion",
+            "type": "string"
+        },
+        {
+            "name": "type",
+            "type": "string"
+        },
+        {
+            "name": "datacontenttype",
+            "type": "string"
+        },
+        {
+            "name": "time",
+            "type": "string"
+        },
+        {
+            "name": "traceparent",
+            "type": [
+                "null",
+                "string"
+            ]
+        },
+        {
+            "name": "brcommacmaxattempt",
+            "type": [
+                "null",
+                "int"
+            ]
+        },
+        {
+            "name": "brcommaccurrentattempt",
+            "type": [
+                "null",
+                "int"
+            ]
+        },
+        {
+            "name": "data",
+            "type": {
+                "fields": [
+                    {
+                        "name": "idBoleto",
+                        "type": "long"
+                    },
+                    {
+                        "name": "cargamaceficioStatus",
+                        "type": "long"
+                    },
+                    {
+                        "name": "arquivoCargaStatus",
+                        "type": "long"
+                    },
+                    {
+                        "logicalType": "decimal",
+                        "name": "valor",
+                        "precision": 15,
+                        "scale": 2,
+                        "type": "bytes"
+                    },
+                    {
+                        "logicalType": "local-timestamp-millis",
+                        "name": "dataEmissao",
+                        "type": "long"
+                    },
+                    {
+                        "logicalType": "local-timestamp-millis",
+                        "name": "dataMovimento",
+                        "type": "long"
+                    }
+                ],
+                "name": "ConfirmacaoAgendamentoPedidoData",
+                "type": "record"
+            }
+        }
+    ],
+    "name": "ConfirmacaoAgendamentoPedidoValue",
+    "namespace": "br.com.mac.schema",
+    "type": "record"
+}

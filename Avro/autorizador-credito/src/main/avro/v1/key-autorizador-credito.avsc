@@ -1,0 +1,16 @@
+{
+	"type": "record",
+	"name": "AutorizadorCreditoKey",
+	"namespace": "br.com.mac.flx.schema",
+	"fields": [
+	 	{
+			"name": "id",
+			"type":"string",
+			"logicalType": "uuid"
+		},
+		{
+			"name": "descricao",
+			"type": "string"
+		}
+	]
+}

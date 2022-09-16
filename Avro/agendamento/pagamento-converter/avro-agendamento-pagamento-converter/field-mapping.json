@@ -1,0 +1,118 @@
+[
+  {
+    "fieldFrom": "idAgendamento",
+    "fieldTo": "idAgendamento",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "idTransacaoOriginal",
+    "fieldTo": "idTransacaoOriginal",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "tipoEventoOriginal",
+    "fieldTo": "tipoEventoOriginal",
+    "isKey": false,
+    "converter" : "avroStringToEnumConverter"
+  },
+  {
+    "fieldFrom": "idTransacaoVenda",
+    "fieldTo": "idTransacaoVenda",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "merchantId",
+    "fieldTo": "merchantId",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "cnpj",
+    "fieldTo": "cnpj",
+    "isKey": true
+  },
+  {
+    "fieldFrom": "raizCnpj",
+    "fieldTo": "raizCnpj",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "valorBruto",
+    "fieldTo": "valorBruto",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "valorLiquido",
+    "fieldTo": "valorLiquido",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "valorDesconto",
+    "fieldTo": "valorDesconto",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "taxaDesconto",
+    "fieldTo": "taxaDesconto",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "dataAgendamento",
+    "fieldTo": "dataAgendamento",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "agenciaBancaria",
+    "fieldTo": "agenciaBancaria",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "contaCorrente",
+    "fieldTo": "contaCorrente",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "digitoContaCorrente",
+    "fieldTo": "digitoContaCorrente",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "codigoBanco",
+    "fieldTo": "codigoBanco",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "codigoVan",
+    "fieldTo": "codigoVan",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "codigoEC",
+    "fieldTo": "codigoEC",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "nsuTef",
+    "fieldTo": "nsuTef",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "nsuTerminal",
+    "fieldTo": "nsuTerminal",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "codigoAdquirente",
+    "fieldTo": "codigoAdquirente",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "codigoAutorizacao",
+    "fieldTo": "codigoAutorizacao",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "idEstabelecimento",
+    "fieldTo": "idEstabelecimento",
+    "isKey": false
+  }
+]

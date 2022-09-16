@@ -1,0 +1,29 @@
+[
+  {
+    "fieldFrom": "id_empresacargadetalheproduto",
+    "fieldTo": "idEmpresaCargaDetalheProduto",
+    "isKey": true,
+    "converter": "avroIntToLongConverter"
+  },
+  {
+    "fieldFrom": "dt_movimento",
+    "fieldTo": "dataMovimento",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "dt_emissao",
+    "fieldTo": "dataEmissao",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "valor",
+    "fieldTo": "valor",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "id_conta",
+    "fieldTo": "idContaDigital",
+    "isKey": false,
+    "converter": "avroIntToLongConverter"
+  }
+]

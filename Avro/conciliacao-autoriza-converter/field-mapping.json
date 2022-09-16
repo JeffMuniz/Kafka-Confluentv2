@@ -1,0 +1,43 @@
+[
+  {
+    "fieldFrom": "idConciliacao",
+    "fieldTo": "idConciliacao",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "idTransacaoOriginal",
+    "fieldTo": "idTransacaoOriginal",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "dataAutorizacao",
+    "fieldTo": "dataAutorizacao",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "merchantId",
+    "fieldTo": "merchantId",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "cnpj",
+    "fieldTo": "cnpj",
+    "isKey": true
+  },
+  {
+    "fieldFrom": "raizCnpj",
+    "fieldTo": "raizCnpj",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "codigoMeioCaptura",
+    "fieldTo": "codigoMeioCaptura",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "statusTransacaoConciliacao",
+    "fieldTo": "statusTransacaoConciliacao",
+    "isKey": false,
+    "converter": "avroStringToEnumConverter"
+  }
+]

@@ -1,0 +1,110 @@
+#!groovy 
+def loadValuesYaml(){
+  def valuesYaml = readYaml file: 'avro.yaml'
+  return valuesYaml;
+}
+pipeline {
+    agent {
+        label "master"        
+    }
+    tools {
+        maven "MVN3.6.2"
+    }
+    environment {
+        NEXUS_VERSION = "nexus3"
+        NEXUS_PROTOCOL = "http"
+        NEXUS_URL = "ec2-18-229-139-6.sa-east-1.compute.amazonaws.com:8081"
+        NEXUS_REPOSITORY = "nexusrepo"
+        NEXUS_CREDENTIAL_ID = "NexusRepo"        
+    }
+    stages {    	
+        stage("Gerando o binario") {
+            steps {
+                script {
+                    sh "mvn clean package -DskipTests=true"
+                }
+            }
+        }
+        stage("Publicando no Nexus") {
+            steps {
+                script {
+                	datas = loadValuesYaml()
+                    pom = readMavenPom file: "pom.xml";
+                    filesByGlob = findFiles(glob: "target/*.${pom.packaging}");
+                    echo "${filesByGlob[0].name} ${filesByGlob[0].path} ${filesByGlob[0].directory} ${filesByGlob[0].length} ${filesByGlob[0].lastModified}"
+                    artifactPath = filesByGlob[0].path;
+                    artifactExists = fileExists artifactPath;
+                    if(artifactExists) {
+                        echo "*** Arquivo: ${artifactPath}, group: ${pom.groupId}, packaging: ${pom.packaging}, version ${pom.version}";
+                        nexusArtifactUploader(
+                            nexusVersion: NEXUS_VERSION,
+                            protocol: NEXUS_PROTOCOL,
+                            nexusUrl: NEXUS_URL,
+                            groupId: pom.groupId,
+                            version: pom.version,							
+                            repository: NEXUS_REPOSITORY,
+                            credentialsId: NEXUS_CREDENTIAL_ID,
+                           artifacts: [                                
+								[artifactId: pom.artifactId, classifier: '', file: artifactPath,type: 'jar']
+                            ]
+                        );
+                    } else {
+                        error "*** Arquivo: ${artifactPath}, não encontrado";
+                    }
+                }
+            }
+        }
+		stage("Atualizando o Schema Registry") {
+			 stages {
+               stage("Atualizando o Schema Key") {
+                   steps {
+                       script {
+							def url = "http://10.70.30.30:8081/subjects/${datas.key.name}/versions"
+							def payload = "{\"schema\": \"${datas.key.schema}\"}"	
+							echo "**** PAYLOAD ${payload}"
+							echo "**** URL ${url}"
+							echo "*** Arquivo Key Name: ${datas.key.name}"
+							echo "*** Arquivo Key Schema: ${datas.key.schema}"
+							def response = sh(script: "curl -X POST ${url} -H \'cache-control: no-cache\' -H \'content-type: application/json\' -d \'${payload}\'", returnStdout: true)		
+							def retorno = readJSON text: response							
+							def returnCode 
+							if (retorno.id != null) {					
+								echo 'Id inclusão' + retorno.id;
+								returnCode = 200;					
+							} else {
+								returnCode = retorno.error_code;
+							}				
+							if (returnCode != 200 && returnCode != 201) {
+								error("Problemas ao inserir o Schema Key com o payload ${payload} no endereço ${url}, mensagem de erro:${retorno.error_code}-${retorno.message}")
+							}
+						}
+                   }
+               }
+               stage("Atualizando o Schema Value") {
+                   steps {
+                       script {
+							def url = "http://10.70.30.30:8081/subjects/${datas.value.name}/versions"
+							def payload = "{\"schema\": \"${datas.value.schema}\"}"
+							echo "**** PAYLOAD ${payload}"
+							echo "**** URL ${url}"
+							echo "*** Arquivo Value Name: ${datas.value.name}"
+							echo "*** Arquivo Value Schema: ${datas.value.schema}"
+							def response = sh(script: "curl -X POST ${url} -H \'cache-control: no-cache\' -H \'content-type: application/json\' -d \'${payload}\'", returnStdout: true)		
+							def retorno = readJSON text: response							
+							def returnCode 
+							if (retorno.id != null) {					
+								echo 'Id inclusão' + retorno.id;
+								returnCode = 200;					
+							} else {
+								returnCode = retorno.error_code;
+							}				
+							if (returnCode != 200 && returnCode != 201) {
+								error("Problemas ao inserir o Schema Key com o payload ${payload} no endereço ${url}, mensagem de erro:${retorno.error_code}-${retorno.message}")
+							}
+						}
+                   }
+               }               
+            }			
+		}
+    }
+}

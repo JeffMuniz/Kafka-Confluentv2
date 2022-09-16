@@ -1,0 +1,18 @@
+version: '2'
+
+services:
+  avro-agendamento-pedido-converter:
+    build: .
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: http://localhost:9092
+      SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL: http://localhost:8081
+      SPRING_KAFKA_CONSUMER_PROPERTIES_SCHEMA_REGISTRY_URL: http://localhost:8081
+      SPRING_KAFKA_PRODUCER_PROPERTIES_SCHEMA_REGISTRY_URL: http://localhost:8081
+      LOGGING_LEVEL_ROOT: INFO
+      LOGGING_BR_COM_mac: INFO
+      SERVER_PORT: 8080
+      SPRING_PRODUCER_OUTBOUND_SCHEMA_ID: 4
+networks:
+  default:
+    external:
+      name: rmoff_kafka

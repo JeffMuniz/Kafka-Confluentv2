@@ -1,0 +1,77 @@
+{
+  "namespace": "br.com.mac.schema",
+  "type": "record",
+  "name": "ConfirmacaoAgendamentoCancelamentoPedidoValue",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "source",
+      "type": "string"
+    },
+    {
+      "name": "specversion",
+      "type": "string"
+    },
+    {
+      "name": "type",
+      "type": "string"
+    },
+    {
+      "name": "datacontenttype",
+      "type": "string"
+    },
+    {
+      "name": "time",
+      "type": "string"
+    },
+    {
+      "name": "traceparent",
+      "type": [
+        "null",
+        "string"
+      ]
+    },
+    {
+      "name": "brcommacmaxattempt",
+      "type": [
+        "null",
+        "int"
+      ]
+    },
+    {
+      "name": "brcommaccurrentattempt",
+      "type": [
+        "null",
+        "int"
+      ]
+    },
+    {
+      "name": "data",
+      "type": {
+        "type": "record",
+        "name": "ConfirmacaoAgendamentoCancelamentoPedidoData",
+        "fields": [
+          {
+            "name": "idBoleto",
+            "type": "long"
+          },
+          {
+            "name": "dataCancelamento",
+            "type": "long",
+            "logicalType": "timestamp-millis"
+          },
+          {
+            "name": "valor",
+            "type": "bytes",
+            "logicalType": "decimal",
+            "precision": 15,
+            "scale": 2
+          }
+        ]
+      }
+    }
+  ]
+}

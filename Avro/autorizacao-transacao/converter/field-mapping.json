@@ -1,0 +1,77 @@
+[
+  {
+    "fieldFrom": "idTransacao",
+    "fieldTo": "idTransacao",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "nsuHost",
+    "fieldTo": "nsuHost",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "status",
+    "fieldTo": "status",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "dataAutorizacao",
+    "fieldTo": "dataAutorizacao",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "dataAlteracao",
+    "fieldTo": "dataAlteracao",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "merchantId",
+    "fieldTo": "merchantId",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "cnpj",
+    "fieldTo": "cnpj",
+    "isKey": true
+  },
+  {
+    "fieldFrom": "raizCnpj",
+    "fieldTo": "raizCnpj",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "codigoAdquirente",
+    "fieldTo": "codigoAdquirente",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "codigoAutorizacao",
+    "fieldTo": "codigoAutorizacao",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "codigoBandeira",
+    "fieldTo": "codigoBandeira",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "codigoProduto",
+    "fieldTo": "codigoProduto",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "tipoProduto",
+    "fieldTo": "tipoProduto",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "valorBruto",
+    "fieldTo": "valorBruto",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "numeroCartao",
+    "fieldTo": "numeroCartao",
+    "isKey": false
+  }
+]

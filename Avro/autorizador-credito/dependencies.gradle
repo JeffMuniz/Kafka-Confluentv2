@@ -1,0 +1,8 @@
+def confluentVersion = '4.0.0'
+def avroVersion      = '1.8.2'
+
+dependencies {
+    implementation "io.confluent:kafka-avro-serializer:${confluentVersion}"
+    implementation "org.apache.avro:avro-compiler:${avroVersion}"
+    implementation "org.apache.avro:avro-maven-plugin:${avroVersion}"
+}

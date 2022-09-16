@@ -1,0 +1,15 @@
+{
+  "type": "record",
+  "name": "ConfirmacaoContaVirtualEstornoKey",
+  "namespace": "br.com.mac-edu.schema",
+  "fields": [
+    {
+      "name": "id",
+      "type": "int"
+    },
+    {
+      "name": "descricao",
+      "type": "string"
+    }
+  ]
+}

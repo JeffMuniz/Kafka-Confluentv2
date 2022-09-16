@@ -1,0 +1,48 @@
+curl -X GET  http://localhost:8083/connectors/conn-in-agendamento-pedido | jq
+
+{
+  "name": "conn-in-agendamento-pedido",
+  "config": {
+    "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+    "timestamp.column.name": "dataSolicitacao",
+    "incrementing.column.name": "idBoleto",
+    "transforms.createKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
+    "connection.passingthroughportalword": "some-passingthroughportalword",
+    "auto.register.schemas": "true",
+    "value.converter.schema.registry.basic.auth.user.info": "Q4FE6BV5B6TUPEKI:f6BQNuTDyq6rzgzrvwWrDAZASpd0OiU8+OZ0wCiSfUdhROVkoGNcp3z3TCZsXxMP",
+    "transforms": "createKey,extractInt,setSchemaName",
+    "description": "Conector de entrada de dados referente a Agendamento Pedido",
+    "value.converter.basic.auth.credentials.source": "USER_INFO",
+    "mode": "timestamp+incrementing",
+    "topic.prefix": "topic-conn-conf-agendamento-pedido",
+    "transforms.createKey.fields": "idBoleto",
+    "poll.interval.ms": "60000",
+    "incrementing.offset": "0",
+    "value.converter": "io.confluent.connect.avro.AvroConverter",
+    "transforms.setSchemaName.schema.name": "br.com.mac-edu.schema.ConnConfirmacaoAgendamentoPedidoValue",
+    "key.converter": "io.confluent.connect.avro.AvroConverter",
+    "validate.non.null": "true",
+    "timestamp.initial": "-1",
+    "query": "SELECT * FROM (SELECT be.Id_Boleto AS idBoleto, CAST(be.ValorBoleto AS NUMERIC(15,2)) AS valor, cb.DataProcessamento AS dataAgendamento, be.DataEmissao AS dataSolicitacao FROM 
+arquivocargastd arq INNER JOIN CargasCredito cb ON cb.ID_ARQUIVOCARGASTD = arq.ID_ARQUIVOCARGASTD INNER JOIN CargaControleFinanceiro cf ON cf.Id_CargaControleFinanceiro = cb.Id_CargaContr
+oleFinanceiro INNER JOIN BoletosEmitidos be on be.Id_Boleto = cf.Id_Boleto WHERE cb.status not in (6) GROUP BY be.Id_Boleto, be.ValorBoleto, cb.DataProcessamento, be.DataEmissao) AS Agendame
+ntoPedido",
+    "transforms.extractInt.type": "org.apache.kafka.connect.transforms.ExtractField$Key",
+    "version": "1",
+    "transforms.setSchemaName.type": "org.apache.kafka.connect.transforms.SetSchemaMetadata$Value",
+    "value.converter.schema.registry.url": "https://psrc-em82q.us-east-2.aws.confluent.cloud",
+    "transforms.extractInt.field": "idBoleto",
+    "connection.user": "confluent_mac_login",
+    "name": "conn-in-agendamento-pedido",
+    "key.converter.schema.registry.basic.auth.user.info": "Q4FE6BV5B6TUPEKI:f6BQNuTDyq6rzgzrvwWrDAZASpd0OiU8+OZ0wCiSfUdhROVkoGNcp3z3TCZsXxMP",
+    "connection.url": "jdbc:sqlserver://10.50.131.85:1433;databaseName=Blue;selectMethod=cursor",
+    "key.converter.schema.registry.url": "https://psrc-em82q.us-east-2.aws.confluent.cloud",
+    "key.converter.basic.auth.credentials.source": "USER_INFO"
+  },
+  "tasks": [
+    {
+      "connector": "conn-in-agendamento-pedido",
+      "task": 0
+    }
+  ],
+  "type": "source"

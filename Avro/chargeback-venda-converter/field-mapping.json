@@ -1,0 +1,152 @@
+[
+  {
+    "fieldFrom": "idTransacao",
+    "fieldTo": "idTransacao",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "idTransacaoOriginal",
+    "fieldTo": "idTransacaoOriginal",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "dataHoraTransacao",
+    "fieldTo": "dataHoraTransacao",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "tipoEventoOriginal",
+    "fieldTo": "tipoEventoOriginal",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "merchantId",
+    "fieldTo": "merchantId",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "cnpj",
+    "fieldTo": "cnpj",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "raizCnpj",
+    "fieldTo": "raizCnpj",
+    "isKey": true
+  },
+  {
+    "fieldFrom": "valorLiquido",
+    "fieldTo": "valorLiquido",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "valorBruto",
+    "fieldTo": "valorBruto",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "nsuHostTransacaoOriginal",
+    "fieldTo": "nsuHostTransacaoOriginal",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "dataTransacaoOriginal",
+    "fieldTo": "dataTransacaoOriginal",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "nsuTransacao",
+    "fieldTo": "nsuTransacao",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "hasPagamento",
+    "fieldTo": "hasPagamento",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "codigoVan",
+    "fieldTo": "codigoVan",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "codigoEC",
+    "fieldTo": "codigoEC",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "valorDesconto",
+    "fieldTo": "valorDesconto",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "descricao",
+    "fieldTo": "descricao",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "codigoBanco",
+    "fieldTo": "codigoBanco",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "agenciaBancaria",
+    "fieldTo": "agenciaBancaria",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "contaCorrente",
+    "fieldTo": "contaCorrente",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "digitoContaCorrente",
+    "fieldTo": "digitoContaCorrente",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "nsuTef",
+    "fieldTo": "nsuTef",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "nsuTerminal",
+    "fieldTo": "nsuTerminal",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "codigoAdquirente",
+    "fieldTo": "codigoAdquirente",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "codigoAutorizacao",
+    "fieldTo": "codigoAutorizacao",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "idEstabelecimento",
+    "fieldTo": "idEstabelecimento",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "tipoAjuste",
+    "fieldTo": "tipoAjuste",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "codigoAjuste",
+    "fieldTo": "codigoAjuste",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "descricaoMotivoAjuste",
+    "fieldTo": "descricaoMotivoAjuste",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "dataHoraLancamento",
+    "fieldTo": "dataHoraLancamento",
+    "isKey": false
+  }
+]

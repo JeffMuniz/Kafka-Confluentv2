@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+  avro-agendamento-credito-converter:
+    container_name: conv-agendamento-credito
+    build: .
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: http://broker:29092
+      SPRING_KAFKA_PROPERTIES_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      LOGGING_LEVEL_ROOT: INFO
+      LOGGING_BR_COM_mac: INFO
+      SERVER_PORT: 8080
+      SPRING_KAFKA_CONSUMER_PROPERTIES_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      SPRING_KAFKA_PRODUCER_PROPERTIES_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      SPRING_PRODUCER_OUTBOUND-SCHEMA-ID: 6
+networks:
+  default:
+    external:
+      name: mac-network

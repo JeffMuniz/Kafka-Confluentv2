@@ -1,0 +1,15 @@
+{
+    "fields": [
+        {
+            "name": "id",
+            "type": "int"
+        },
+        {
+            "name": "descricao",
+            "type": "string"
+        }
+    ],
+    "name": "ConfirmacaoAgendamentoPedidolKey",
+    "namespace": "br.com.mac.schema",
+    "type": "record"
+}

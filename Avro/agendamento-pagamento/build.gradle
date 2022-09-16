@@ -1,0 +1,71 @@
+plugins {
+    id "com.bmuschko.nexus" version "${nexusVersion}"
+    id "com.commercehub.gradle.plugin.avro" version "${avroGradleVersion}"
+    id "org.sonarqube" version "${sonarQubeVersion}"
+    id 'jacoco'
+    id 'java'
+    id 'maven-publish'
+}
+
+def jarSuffix = System.getenv('JAR_SUFFIX') ?: ""
+description = description
+group       = group
+version     = version + jarSuffix
+
+// Separando dependencias para outro arquivo.
+apply from: 'dependencies.gradle'
+
+repositories {
+    maven {
+        allowInsecureProtocol = true
+        url = macRepo + '/maven-central'
+    }
+
+    maven {
+        allowInsecureProtocol = true
+        url = macRepo + '/nexusrepo'
+    }
+
+    maven {
+        allowInsecureProtocol = true
+        url = macRepo + '/maven-releases'
+    }
+
+    maven {
+        url = 'https://packages.confluent.io/maven'
+    }
+
+    mavenLocal()
+}
+
+generateAvroJava {
+    finalizedBy ':publishToMavenLocal'
+}
+
+jacoco {
+    toolVersion = "0.8.5"
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
+}
+
+nexus {
+    sign                  = false
+    repositoryUrl         = macRepo + '/maven-releases'
+    snapshotRepositoryUrl = macRepo + '/maven-snapshots'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}

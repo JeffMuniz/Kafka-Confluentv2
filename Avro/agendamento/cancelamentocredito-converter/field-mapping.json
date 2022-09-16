@@ -1,0 +1,24 @@
+[
+  {
+    "fieldFrom": "idContaDigital",
+    "fieldTo": "idContaDigital",
+    "isKey": false,
+    "converter": "avroIntToLongConverter"
+  },
+  {
+    "fieldFrom": "idAgendamento",
+    "fieldTo": "idAgendamento",
+    "isKey": true,
+    "converter": "avroIntToLongConverter"
+  },
+  {
+    "fieldFrom": "dataCancelamento",
+    "fieldTo": "dataCancelamento",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "valor",
+    "fieldTo": "valor",
+    "isKey": false
+  }
+ ]

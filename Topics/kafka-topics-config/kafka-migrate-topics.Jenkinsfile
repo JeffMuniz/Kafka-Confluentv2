@@ -1,0 +1,30 @@
+switch(ENVIRONMENT) {
+    case 'qa':
+        confluentHost = 'http://10.70.30.30:9092'
+    break
+
+    case 'stg':
+        confluentHost = 'http://10.70.33.15:9092'
+    break
+
+    case 'stg-ccloud':
+        confluentHost = 'https://pkc-4nym6.us-east-1.aws.confluent.cloud:9092'
+    break
+
+    case 'prod':
+        confluentHost = ' '
+    break
+}
+
+node {
+    stage ('Checkout SCM') {
+        checkout scm
+    }
+
+        stage('Create Topic') {
+            sh """
+                 ./migrate-all-topics.sh ${env.ENVIRONMENT} /var/lib/jenkins/kafka_tools/bin/ ${confluentHost}
+            """
+        }
+    }
+

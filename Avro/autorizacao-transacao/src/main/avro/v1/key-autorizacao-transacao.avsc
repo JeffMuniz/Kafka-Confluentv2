@@ -1,0 +1,14 @@
+{
+	"type": "record",
+	"name": "AutorizacaoTransacaoKey",
+	"namespace": "br.com.mac.schema",
+	"fields": [
+	 {
+		"name": "id",
+		"type": "int"
+	},
+	{
+		"name": "descricao",
+		"type": "string"
+	}]
+}

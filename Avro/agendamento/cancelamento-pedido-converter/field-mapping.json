@@ -1,0 +1,18 @@
+[
+  {
+    "fieldFrom": "idBoleto",
+    "fieldTo": "idBoleto",
+    "isKey": false,
+    "converter": "avroIntToLongConverter"
+  },
+  {
+    "fieldFrom": "dataCancelamento",
+    "fieldTo": "dataCancelamento",
+    "isKey": false
+  },
+  {
+    "fieldFrom": "valor",
+    "fieldTo": "valor",
+    "isKey": false
+  }
+ ]

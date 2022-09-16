@@ -1,0 +1,56 @@
+Lista Configurações de um Connector:
+curl -X GET http://localhost:8083/connectors/conn-in-chargeback-venda/config | jq
+
+{
+  "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+  "timestamp.column.name": "dataHoraTransacao",
+  "incrementing.column.name": "idTransacao",
+  "transforms.createKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
+  "connection.passingthroughportalword": "machina-passwd",
+  "transforms": "createKey,extractInt",
+  "value.converter.schema.registry.basic.auth.user.info": "Machina-Pass",
+  "description": "Conector de entrada de dados transacionais de chargeback venda",
+  "internal.key.converter.schemas.enable": "true",
+  "value.converter.basic.auth.credentials.source": "USER_INFO",
+  "mode": "timestamp+incrementing",
+  "topic.prefix": "topic-conn-chargeback-venda",
+  "transforms.createKey.fields": "raizCnpj",
+  "poll.interval.ms": "1200000",
+  "incrementing.offset": "0",
+  "value.converter": "io.confluent.connect.avro.AvroConverter",
+  "timestamp.offset": "0",
+  "key.converter": "io.confluent.connect.avro.AvroConverter",
+  "validate.non.null": "true",
+  "max.poll.records": "5000",
+  "query": "select * from  (SELECT cast(DMC.id_DetalheMovimento AS bigint) AS idTransacao, cast(OV.Id_ExternoVenda AS bigint) AS idTransacaoOriginal, DMC.dt_InclusaoChargeback AS dataHoraTra
+nsacao, 'VENDA' AS tipoEventoOriginal, cast(e.id_Estabelecimento AS varchar) AS merchantId, E.no_CNPJ AS cnpj,SUBSTRING(E.no_CNPJ, 1, 8) AS raizCnpj, OV.vl_Liquido AS valorLiquido, OV.vl_Ope
+racao AS valorBruto, cast(OV.no_TransacaoHostmachina AS bigint) AS nsuHostTransacaoOriginal, OV.dt_Operacao AS dataTransacaoOriginal, cast(DMC.id_DetalheMovimento AS bigint) AS nsuTransacao, cas
+t((CASE WHEN MPV.dt_PrevistaRepasse <= getdate() THEN  1  ELSE 0 END) AS bit) AS hasPagamento, OV.cd_EstabelecimentoAdq AS codigoEC, OV.Id_Adquirente AS codigoVan, OV.vl_Comissao AS valorDes
+conto, CONVERT(VARCHAR(30),SUBSTRING(UPPER(TD.nm_TipoDetalheMovimento),1,30)) AS descricao, DAD.NO_BANCO AS codigoBanco, DAD.NO_AGENCIA AS agenciaBancaria, DAD.NO_CONTACORRENTE AS contaCorre
+nte, DAD.no_DigitoContaCorrente AS digitoContaCorrente, cast(OV.no_TransacaoTEF AS bigint) AS nsuTef, cast(0 AS bigint) AS nsuTerminal, OV.Id_Adquirente AS codigoAdquirente, OV.no_Autorizaca
+o AS codigoAutorizacao, E.id_Estabelecimento AS idEstabelecimento, (CASE WHEN TM.nm_TipoMovimento = 'ESTORNO COMISSAO - COMPRA A VISTA PRÉ-PAGO VISA' THEN  1 WHEN TM.nm_TipoMovimento = 'CHAR
+GE BACK COMPRA A VISTA PRÉ-PAGO VISA' THEN  2 WHEN TM.nm_TipoMovimento = 'CANCELAMENTO DE VENDA' THEN 2 WHEN TM.nm_TipoMovimento = 'ESTORNO DE COMISSÃO POR CANCELAMENTO DE VENDA' THEN 1 END)
+ AS tipoAjuste, TTL.Id_TipoTransacaoLojista AS codigoAjuste, CONVERT(VARCHAR(30), SUBSTRING(UPPER(TTL.Nome),1,30)) AS descricaoMotivoAjuste, MPC.dt_GeracaoMovimento as dataHoraLancamento FRO
+M Detalhe_Movimento_Pagamento DMC (NOLOCK) INNER JOIN Movimento_Pagamento MPC (NOLOCK) ON DMC.id_MovimentoPagamento = MPC.id_MovimentoPagamento INNER JOIN Tipo_Movimento TM (NOLOCK) ON MPC.i
+d_TipoMovimento = tm.id_TipoMovimento INNER JOIN Tipo_Movimento_Emissor TME WITH (NOLOCK) ON TM.id_TipoMovimento = TME.id_TipoMovimento INNER JOIN etl.TiposTransacoesLojista TTL  WITH (NOLOC
+K) ON TME.id_TipoTransacao = TTL.Id_TipoTransacaoLojista INNER JOIN Estabelecimento E (NOLOCK) ON MPC.id_Estabelecimento = E.id_Estabelecimento INNER JOIN Operacao_Venda OV (NOLOCK) ON OV.id
+_OperacaoVenda = DMC.id_OperacaoVenda INNER JOIN Detalhe_Movimento_Pagamento DMV (NOLOCK) ON OV.id_OperacaoVenda = DMV.id_OperacaoVenda INNER JOIN Movimento_Pagamento MPV (NOLOCK) ON DMV.id_
+MovimentoPagamento = MPV.id_MovimentoPagamento INNER JOIN Tipo_Detalhe_Movimento TD (NOLOCK) ON DMC.id_TipoDetalheMovimento = TD.id_TipoDetalheMovimento INNER JOIN CREDOR CR (NOLOCK) ON CR.I
+D_CREDOR = E.ID_CREDOR INNER JOIN DADOS_BANCARIOS DAD (NOLOCK) ON CR.ID_DADOSBANCARIOS = DAD.ID_DADOSBANCARIOS WHERE TM.id_TipoMovimento in (30,130,277,278) AND DMV.id_TipoDetalheMovimento =
+ 1) as Chargebacks",
+  "producer.buffer.memory": "26843545",
+  "transforms.extractInt.type": "org.apache.kafka.connect.transforms.ExtractField$Key",
+  "offset.flush.timeout.ms": "6000",
+  "version": "1",
+  "offset.flush.interval.ms": "30000",
+  "value.converter.schema.registry.url": "https://machina-aws-clusters.us-east-2.aws.confluent.cloud",
+  "transforms.extractInt.field": "raizCnpj",
+  "connection.user": "confluent_machina_login",
+  "internal.value.converter.schemas.enable": "true",
+  "name": "conn-in-chargeback-venda",
+  "key.converter.schema.registry.basic.auth.user.info": "Machina-Pass",
+  "connection.url": "jdbc:sqlserver://10.1.1.1:1433;databaseName=Adquirente;selectMethod=cursor",
+  "key.converter.schema.registry.url": "https://machina-aws-clusters.us-east-2.aws.confluent.cloud",
+  "quote.sql.identifiers": "NEVER",
+  "key.converter.basic.auth.credentials.source": "USER_INFO"
+}

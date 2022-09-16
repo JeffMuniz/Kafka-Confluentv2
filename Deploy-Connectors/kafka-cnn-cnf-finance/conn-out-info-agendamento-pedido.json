@@ -1,0 +1,22 @@
+{
+  "name": "conn-out-info-agendamento-pedido",
+  "config": {
+    "version": 1,
+    "description": "Conector de saida para base de dados informacional referente a Info Agendamento Pedido",
+    "connector.class": "br.com.mac-edu.kafka.connect.cassandra.MacEduCassandraSinkConnector",
+    "tasks.max": "1",
+    "poll.interval.ms": "1500",
+    "topics": "topic-info-agendamento-pedido",
+    "value.converter.schema.registry.url": "{{ENV_API_SCHEMA_REGISTRY_URL}}",
+    "value.converter": "org.apache.kafka.connect.json.JsonConverter",
+    "cassandra.contact.points": "{{ENV_ELASSANDRA}}",
+    "cassandra.keyspace": "{{ENV_KEYSPACE_BI}}",
+    "cassandra.table.name": "info_agendamento_pedido",
+    "cassandra.after.ddl": "CREATE INDEX index_info_agendamento_pedido_dh ON info_agendamento_pedido (data_hora)",
+    "cassandra.consistency.level": "ANY",
+    "cassandra.write.mode": "Update",
+    "transforms": "createKey",
+    "transforms.createKey.type": "org.apache.kafka.connect.transforms.ValueToKey",
+    "transforms.createKey.fields": "id_boleto_pedido"
+  }
+}

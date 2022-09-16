@@ -1,0 +1,87 @@
+{
+   "namespace":"br.com.mac.schema",
+   "type":"record",
+   "name":"OperacaoVenda",
+   "fields":[
+      {
+         "name":"id",
+         "type":"string"
+      },
+      {
+         "name":"source",
+         "type":"string"
+      },
+      {
+         "name":"specversion",
+         "type":"string"
+      },
+      {
+         "name":"type",
+         "type":"string"
+      },
+      {
+         "name":"datacontenttype",
+         "type":"string"
+      },
+      {
+         "name":"time",
+         "type":"string"
+      },
+      {
+         "name":"traceparent",
+         "type":[
+            "null",
+            "string"
+         ]
+      },
+      {
+         "name":"brcommacmaxattempt",
+         "type":"int"
+      },
+      {
+         "name":"brcommaccurrentattempt",
+         "type":"int"
+      },
+      {
+         "name":"data",
+         "type":[
+            {
+               "type":"record",
+               "name":"OperacaoVendaData",
+               "fields":[
+                  {
+                  	"name":"idexternovenda",
+                  	"type":"int"
+                  },
+                  {
+                     "name":"dataoriginalrepasse",
+                     "type": "long",
+  					 "logicalType": "timestamp-millis"
+                  },
+                  {
+                     "name":"valoroperacao",
+                     "type": "bytes",
+					 "logicalType": "decimal",
+					 "precision":15,
+					 "scale": 2
+                  },
+                  {
+                     "name":"valorcomissao",
+                     "type": "bytes",
+					 "logicalType": "decimal",
+					 "precision":15,
+					 "scale": 2
+                  },
+                  {
+                     "name":"valoroperacaovenda",
+                     "type": "bytes",
+					 "logicalType": "decimal",
+					 "precision":15,
+					 "scale": 2
+                  }
+               ]
+            }
+         ]
+      }
+   ]
+}

@@ -1,0 +1,304 @@
+void atualizarSchemaKey(keySchemaName, keySchemaFile){
+    def url = "${schemaRegistry}/subjects/${keySchemaName}/versions"
+    def keySchema = readFile('src/main/avro/v1/' + keySchemaFile).replaceAll('\n','').replaceAll("\\s","").replaceAll('"', '\\\\"')
+    def payload = "{\"schema\": \"" + keySchema + "\"}"
+
+    echo "**** PAYLOAD ${payload}"
+    echo "**** URL ${url}"
+    echo "*** Arquivo Key Name: " + keySchemaName
+    echo "*** Arquivo Key Schema: " + keySchema
+
+    def response = sh(script: "curl ${schemaRegistryAuth} -X POST ${url} -H \'cache-control: no-cache\' -H \'content-type: application/json\' -d \'${payload}\'", returnStdout: true)
+    def retorno = readJSON text: response
+    def returnCode
+
+    if (retorno.id != null) {
+        echo 'Id inclusao' + retorno.id;
+        returnCode = 200;
+    } else {
+        returnCode = retorno.error_code;
+    }
+
+    if (returnCode != 200 && returnCode != 201) {
+        error("Problemas ao inserir o Schema Key com o payload ${payload} no endereco ${url}, mensagem de erro:${retorno.error_code}-${retorno.message}")
+    }
+}
+
+void atualizarSchemaValue(valueSchemaName, valueSchemaFile) {
+    def url = "${schemaRegistry}/subjects/${valueSchemaName}/versions"
+    def valueSchema = readFile('src/main/avro/v1/' + valueSchemaFile).replaceAll('\n','').replaceAll("\\s","").replaceAll('"', '\\\\"')
+    def payload = "{\"schema\": \"" + valueSchema + "\"}"
+
+    echo "**** PAYLOAD ${payload}"
+    echo "**** URL ${url}"
+    echo "*** Arquivo Value Name: " + valueSchemaName
+    echo "*** Arquivo Value Schema: " + valueSchema
+
+    def response = sh(script: "curl ${schemaRegistryAuth} -X POST ${url} -H \'cache-control: no-cache\' -H \'content-type: application/json\' -d \'${payload}\'", returnStdout: true)
+    def retorno = readJSON text: response
+    def returnCode
+
+    if (retorno.id != null) {
+        echo 'Id inclusao' + retorno.id;
+        returnCode = 200;
+    } else {
+        returnCode = retorno.error_code;
+    }
+    if (returnCode != 200 && returnCode != 201) {
+        error("Problemas ao inserir o Schema Key com o payload ${payload} no endereco ${url}, mensagem de erro:${retorno.error_code}-${retorno.message}")
+    }
+}
+
+/* @NonCPS
+def slackNotifier(String buildResult) {
+  if ( buildResult == "SUCCESS" ) {
+    slackSend ( color: "good",
+    teamDomain: 'macmaceficios',
+    tokenCredentialId: 'mac-slack',
+    channel: '#financeiro_contabil-build',
+    message: "Job: ${env.JOB_NAME} \nBuild: ${env.BUILD_NUMBER} \nStatus: Sucesso \nTempo: ${currentBuild.durationString.minus(' and counting')}")
+  }
+  else if( buildResult == "FAILURE" ) {
+    slackSend( color: "danger",
+    teamDomain: 'macmaceficios',
+    tokenCredentialId: 'mac-slack',
+    channel: '#financeiro_contabil-build',
+    message: "Job: ${env.JOB_NAME} \nBuild: ${env.BUILD_NUMBER} \nStatus: Falha \nTempo: ${currentBuild.durationString.minus(' and counting')}")
+  }
+  else if( buildResult == "UNSTABLE" ) {
+    slackSend( color: "warning",
+      teamDomain: 'macmaceficios',
+      tokenCredentialId: 'mac-slack',
+      channel: '#financeiro_contabil-build',
+      message: "Job: ${env.JOB_NAME} \nBuild: ${env.BUILD_NUMBER} \nStatus: Unstable \nTempo: ${currentBuild.durationString.minus(' and counting')}")
+  }
+  else if( buildResult == "ABORTED" ) {
+    slackSend( teamDomain: 'macmaceficios',
+      tokenCredentialId: 'mac-slack',
+      channel: '#financeiro_contabil-build',
+      message: "Job: ${env.JOB_NAME} \nBuild: ${env.BUILD_NUMBER} \nStatus: Abortado \nTempo: ${currentBuild.durationString.minus(' and counting')}")
+  }
+  else if( buildResult == "null" ) {
+    slackSend( color: "warning",
+      teamDomain: 'macmaceficios',
+      tokenCredentialId: 'mac-slack',
+      channel: '#financeiro_contabil-build',
+      message: "Job: ${env.JOB_NAME} \nBuild: ${env.BUILD_NUMBER} \nStatus: Desconhecido \nTempo: ${currentBuild.durationString.minus(' and counting')}")
+  }
+}
+
+def startMsg() {
+  commit_desc = sh(script: "git log -1 --format='format:%s'", returnStdout: true).trim()
+  slackSend(teamDomain: 'macmaceficios',
+    tokenCredentialId: 'mac-slack',
+    channel: '#financeiro_contabil-build',
+    message: "Job: ${env.JOB_NAME} \nBuild: <${env.BUILD_URL}|build ${env.BUILD_DISPLAY_NAME}> \nIniciado por: ${env.BUILD_USER}\n Commit: ${commit_desc}\nBranch: ${env.BRANCH_NAME}")
+}
+*/
+@NonCPS
+def configFromBranch(branch) {
+    if (branch ==~ /(develop)/) { 
+        return [
+            shouldTest: true,
+            shouldAnalyze: false,
+            shouldStoreArtifact: true,
+            jarSuffix: '-SNAPSHOT',
+            schemaRegistry: 'http://10.70.30.30:8081',
+            schemaRegistryAuth: "-u ",
+            updateSchemaRegistry: true
+        ]
+    }
+    else if (branch ==~ /(staging)/) {
+        return [
+            shouldTest: true,
+            shouldAnalyze: false,
+            shouldStoreArtifact: false,
+            jarSuffix: '',
+            schemaRegistry: 'https://psrc-4r3xk.us-east-2.aws.confluent.cloud',
+            schemaRegistryAuth: '-u $STG_SCHEMA_REGISTRY_API_KEY:$STG_SCHEMA_REGISTRY_API_SECRET',
+            updateSchemaRegistry: true
+        ]
+    }
+    else if (branch ==~ /(master)/) {
+        return [
+            shouldTest: true,
+            shouldAnalyze: false,
+            shouldStoreArtifact: true,
+            jarSuffix: '',
+            schemaRegistry: 'https://psrc-em82q.us-east-2.aws.confluent.cloud',
+            schemaRegistryAuth: "-u  $SCHEMA_REGISTRY_API_KEY:$SCHEMA_REGISTRY_API_SECRET",
+            updateSchemaRegistry: true
+        ]
+    } 
+    else {
+        return [
+            shouldTest: true,
+            shouldAnalyze: false,
+            shouldStoreArtifact: false,
+            jarSuffix: "-default",
+            schemaRegistry: '',
+            updateSchemaRegistry: false
+        ]
+    }
+}
+
+pipeline {
+    agent none
+    
+    environment {
+        CONFIG = configFromBranch(BRANCH_NAME)
+        SHOULD_TEST = "${CONFIG.shouldTest}"
+        SHOULD_ANALYZE = "${CONFIG.shouldAnalyze}"
+        SHOUD_STORE_ARTIFACT = "${CONFIG.shouldStoreArtifact}"
+        UPDATE_SCHEMA_REGISTRY = "${CONFIG.updateSchemaRegistry}"
+        JAR_SUFFIX = "${CONFIG.jarSuffix}"
+
+        GIT_URL="git@bitbucket.org:macvisacard/agendamento-pagamento-avro.git"
+        PROJECT_NAME="agendamento-pagamento-avro"
+
+        library         = "${PROJECT_NAME}"
+        keySchemaFile   = 'key-agendamento-pagamento.avsc'
+        keySchemaName   = 'topic-agendamento-pagamento-key'
+        valueSchemaFile = 'value-agendamento-pagamento.avsc'
+        valueSchemaName = 'topic-agendamento-pagamento-value'
+        schemaRegistry = "${CONFIG.schemaRegistry}"
+        schemaRegistryAuth = "${CONFIG.schemaRegistryAuth}"
+
+    }
+          
+    stages {
+        stage ('CI') {
+            agent {
+                label 'TestContainer'
+            }
+            stages {
+                stage('SCM - Checkout') {
+                    steps{
+                        cleanWs()
+                        git branch: BRANCH_NAME,
+                        url: GIT_URL
+                        echo 'SCM Checkout'
+                    }
+                }
+                stage ('Tests'){
+                    when {
+                        expression { SHOULD_TEST == 'true' }
+                    }
+                    stages {
+                        stage('Tests - Gradle'){
+                            steps {
+                                sh "./gradlew -i clean test jacocoTestReport jacocoTestCoverageVerification --stacktrace"
+                            }
+                        }
+                    }
+                }
+                stage ('SonarQube & Quality Gate'){
+                    when {
+                        expression { SHOULD_ANALYZE == 'true' }
+                    }
+                    stages{
+                        stage('Analysis - SonarQube'){
+                            steps {
+                                withSonarQubeEnv('SONAR'){
+                                    sh "sh ./gradlew -i sonarqube \
+                                            --stacktrace \
+                                            -Dsonar.projectKey=${application}-${BRANCH_NAME} \
+                                            -Dsonar.projectName=${application}-${BRANCH_NAME}"
+                                }
+                            }
+                        }
+                        stage('Quality gate'){
+                            steps {
+                                timeout ( time: 1, unit: 'HOURS'){
+                                    script{
+                                        def qg = waitForQualityGate()
+                                        if (qg.status != 'OK'){
+                                            error "Pipeline aborted due to a quality gate failure: ${qg.status}"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                stage("Publish Artifact - Nexus") {
+                    when {
+                      expression { SHOUD_STORE_ARTIFACT == 'true' }
+                    }
+                    steps {
+                        sh "./gradlew -i uploadArchives"
+                    }
+                }
+            }
+         }
+         stage ('CD') {
+            
+            stages {
+                stage ('Deploy') {
+                    agent {
+                        label 'Build'
+                    }
+                    stages{                       
+                        stage('Build - Gradle'){
+                            steps{
+                                sh "./gradlew -i assemble"
+                            }
+                        }
+                        stage ('Schema Key Update') {
+                            when {
+                              expression { UPDATE_SCHEMA_REGISTRY == 'true' }
+                            }                                  
+                            steps {                          
+                                echo 'Atualizando schema key principal'
+                                atualizarSchemaKey(keySchemaName, keySchemaFile)
+                    
+                                echo 'Atualizando schema key retry'
+                                atualizarSchemaKey(keySchemaName.replaceAll('-key', '-retry-key'), keySchemaFile)
+                    
+                                echo 'Atualizando schema key dlq'
+                                atualizarSchemaKey(keySchemaName.replaceAll('-key', '-dlq-key'), keySchemaFile)
+                            }
+                        }
+                        stage ('Schema Value Update') {
+                            when {
+                              expression { UPDATE_SCHEMA_REGISTRY == 'true' }
+                            }                                  
+                            steps {                          
+                                echo 'Atualizando schema value principal'
+                                atualizarSchemaValue(valueSchemaName, valueSchemaFile)
+
+                                echo 'Atualizando schema value retry'
+                                atualizarSchemaValue(valueSchemaName.replaceAll('-value', '-retry-value'), valueSchemaFile)
+
+                                echo 'Atualizando schema value dlq'
+                                atualizarSchemaValue(valueSchemaName.replaceAll('-value', '-dlq-value'), valueSchemaFile)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    post {
+        success {
+            script{
+                slackNotifier('SUCCESS')
+            }
+        }
+        failure{
+            script{
+                slackNotifier('FAILURE')
+            }
+        }
+        unstable{
+            script{
+                slackNotifier('UNSTABLE')
+            }
+        }
+        aborted{
+            script{
+                slackNotifier('ABORTED')
+            }
+        }
+    } 
+}

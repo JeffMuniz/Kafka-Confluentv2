@@ -1,0 +1,35 @@
+[
+    {
+        "converter": "avroIntToLongConverter",
+        "fieldFrom": "id_boleto",
+        "fieldTo": "idBoleto",
+        "isKey": true
+    },
+    {
+        "converter": "avroIntToLongConverter",
+        "fieldFrom": "cb_status",
+        "fieldTo": "cargamaceficioStatus",
+        "isKey": false
+    },
+    {
+        "converter": "avroIntToLongConverter",
+        "fieldFrom": "arq_status",
+        "fieldTo": "arquivoCargaStatus",
+        "isKey": false
+    },
+    {
+        "fieldFrom": "valor",
+        "fieldTo": "valor",
+        "isKey": false
+    },
+    {
+        "fieldFrom": "dt_emissao",
+        "fieldTo": "dataEmissao",
+        "isKey": false
+    },
+    {
+        "fieldFrom": "dt_movimento",
+        "fieldTo": "dataMovimento",
+        "isKey": false
+    }
+]
