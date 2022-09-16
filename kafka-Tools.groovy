@@ -273,8 +273,7 @@ vim conn-out-relatorio-pedido.json
 
 
 curl -s -H "Content-Type: application/json" -X POST -d @conn-in-relatorio-pedido.json  http://localhost:8083/connectors/ | jq
-curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4 | jq 
-curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4/status | jq 
+ curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4/status | jq 
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4/topic | jq 
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4/topics | jq 
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4/status | jq 
@@ -303,8 +302,7 @@ curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5/status 
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5 | jq
  
-curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4 | jq 
-curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5/status | jq 
+ curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5/status | jq 
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5 | jq 
 sudo su -
 ls
