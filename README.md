@@ -1,49 +1,3 @@
-comando criar:
-ccloud kafka topic create seuTopico --partitions 16 --cluster machi-naa
-ccloud kafka topic create topic-conf-contavirtual-estorno --partitions 4 --cluster machi-naa
-
-
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-comando atualizar:
-ccloud kafka topic update topic-conf-contavirtual-estorno --config="retention.ms=604800000"
-ccloud kafka topic create topic-conn-conf-contavirtual-estorno-dlq --partitions 4 --cluster machi-naa
-
-
-$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-action=create
-topic=topic-conn-conf-contavirtual-estorno-dlq
-replication-factor=1
-partitions=4
-retention.ms=-1
-ccloud kafka topic update topic-conn-conf-contavirtual-estorno-dlq --config="-1"
-ccloud kafka topic create topic-conn-conf-contavirtual-estorno-retry --partitions 4 --cluster machi-naa
-ccloud kafka topic update topic-conn-conf-contavirtual-estorno-retry --config="604800000"
-
-
-
-
- ccloud kafka topic describe topic-conf-contavirtual-estorn
-
-
-
-ccloud kafka topic create topic-conn-conf-contavirtual-estorno --partitions 4 --cluster machi-naa
-ccloud kafka topic update topic-conn-conf-contavirtual-estorno --config="retention.ms=604800000"
-ccloud kafka topic create topic-conn-conf-contavirtual-estorno-dlq --partitions 4 --cluster machi-naa
-ccloud kafka topic update topic-conn-conf-contavirtual-estorno-dlq --config="-1"
-ccloud kafka topic update topic-conn-conf-contavirtual-estorno-dlq --config=-1
-ccloud kafka topic update topic-conn-conf-contavirtual-estorno-dlq --config="retention.ms=-1"
-ccloud kafka topic create topic-conn-conf-contavirtual-estorno-retry --partitions 4 --cluster machi-naa
-ccloud kafka topic update topic-conn-conf-contavirtual-estorno-retry --config="604800000"
-ccloud kafka topic create topic-conf-contavirtual-estorno-dlq --partitions 4 --cluster machi-naa
-ccloud kafka topic update topic-conf-contavirtual-estorno-dlq --config="retention.ms=-1"
-ccloud kafka topic create topic-conf-contavirtual-estorno-retry --partitions 4 --cluster machi-naa
-ccloud kafka topic update topic-conf-contavirtual-estorno-retry --config="retention.ms=604800000"[ec2-user@ip-172-22-33-216 tmp]$ 
-ccloud kafka topic update topic-conf-contavirtual-estorno-retry --config="retention.ms=604800000"
-                                                                                       604800000 
-
-
-
-
 From Kafka API
 connector-name=MEU-CONCTOR
 curl -X GET http://10.10.10.1:8083/connectors/$CONNECTOR-NAME/status | jq
@@ -603,6 +557,7 @@ vim conn-out-relatorio-pedido.json
 
 
 curl -s -H "Content-Type: application/json" -X POST -d @conn-in-relatorio-pedido.json  http://localhost:8083/connectors/ | jq
+curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4 | jq 
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4/status | jq 
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4/topic | jq 
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4/topics | jq 
@@ -632,7 +587,7 @@ curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5/status 
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5 | jq
  
- 
+curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4 | jq 
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5/status | jq 
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5 | jq 
 sudo su -
@@ -1687,7 +1642,7 @@ vim conn-out-relatorio-pedido.json
 
 
 curl -s -H "Content-Type: application/json" -X POST -d @conn-in-relatorio-pedido.json  http://localhost:8083/connectors/ | jq
- 
+curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4 | jq 
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4/status | jq 
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4/topic | jq 
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4/topics | jq 
@@ -1717,7 +1672,8 @@ curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5/status 
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5 | jq
  
- curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5/status | jq 
+curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v4 | jq 
+curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5/status | jq 
 curl -X GET http://localhost:8083/connectors/conn-in-relatorio-pedido-v5 | jq 
 sudo su -
 ls
