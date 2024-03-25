@@ -1,0 +1,67 @@
+
+info:
+  app:
+    name: '@project.name@'
+    description: '@project.description@'
+  build:
+    groupId: '@project.groupId@'
+    artifact: '@project.artifactId@'
+    version: '@project.version@'
+  env:
+    java:
+      vendor: ${java.specification.vendor}
+      vm-name: ${java.vm.name}
+      runtime-version: ${java.runtime.version}
+
+spring:
+  jackson:
+    serialization:
+      INDENT_OUTPUT: false
+      WRITE_DATES_AS_TIMESTAMPS: false
+    time-zone: America/Sao_Paulo
+
+  datasource-blue:
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    jdbc-url: ${SPRING_DATASOURCE_BLUE_JDBC_URL}
+    username: ${SPRING_DATASOURCE_BLUE_USERNAME}
+    password: ${SPRING_DATASOURCE_BLUE_PASSWORD}
+    hikari:
+      idle-timeout: 10000
+      maximum-pool-size: 10
+      minimum-idle: 5
+      pool-name: BlueHikariPool
+      connection-timeout: 60000
+
+  datasource-controle:
+    driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    jdbc-url: ${SPRING_DATASOURCE_CONTROLE_ACESSO_JDBC_URL}
+    username: ${SPRING_DATASOURCE_CONTROLE_ACESSO_USERNAME}
+    password: ${SPRING_DATASOURCE_CONTROLE_ACESSO_PASSWORD}
+    hikari:
+      idle-timeout: 10000
+      maximum-pool-size: 10
+      minimum-idle: 5
+      pool-name: ControleHikariPool
+  jpa:
+    show-sql: true
+    hibernate:
+      dialect: org.hibernate.dialect.SQLServer2008Dialect
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+
+
+app:
+  historico:
+    host: ${SPRING_HISTORICO_HOST}
+
+k8s:
+  pathSwagger: ${PATH_SWAGGER:/}
+server:
+  servlet:
+    encoding:
+      enabled: true
+      charset: UTF-8
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE

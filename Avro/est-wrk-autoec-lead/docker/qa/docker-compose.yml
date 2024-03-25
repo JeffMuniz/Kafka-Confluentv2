@@ -1,0 +1,10 @@
+est-wrk-autoec-lead-BRANCH:
+  image: IMAGE
+  entrypoint: java -Xms512m -Xmx512m -XX:+UseParallelGC -jar est-wrk-autoec-lead.jar
+  environment:
+    - SPRING_PROFILES_ACTIVE=qa    
+# Antes de alterar pergunte para o time de infra
+  labels:
+    aplicacao: est-wrk-autoec-lead-BRANCH
+    io.rancher.scheduler.affinity:host_label: blue=qa_novas
+    io.rancher.container.pull_image: always
