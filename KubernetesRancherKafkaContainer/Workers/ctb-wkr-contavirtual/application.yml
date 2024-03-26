@@ -1,0 +1,77 @@
+spring:
+  application:
+    name: /ctb-wkr-contavirtual
+  main:
+    banner-mode: 'OFF'
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS}
+    listener:
+      ack-mode: manual
+      concurrency: 8
+    consumer:
+      group-id: ${SPRING_KAFKA_CONSUMER_GROUP_ID:worker-ctb-wkr-contavirtual-group-1}
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      value-deserializer: io.confluent.kafka.serializers.KafkaAvroDeserializer
+      properties:
+        schema:
+          registry:
+            url: ${SPRING_KAFKA_CONSUMER_PROPERTIES_SCHEMA_REGISTRY_URL}
+        specific:
+          avro:
+            reader: false
+        spring:
+          json:
+            trusted:
+              packages: io.cloudevents,br.com.mac-edu,*
+      inbound-payload-topic: ${SPRING_KAFKA_CONSUMER_INBOUND_PAYLOAD_TOPIC:topic-conf-contavirtual}
+      key-deserializer:  org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      client-id: ${SPRING_KAFKA_PRODUCER_CLIENT_ID:worker-ctb-wkr-contavirtual-client-1}
+      retries: 1
+      acks: 1
+      value-serializer: io.confluent.kafka.serializers.KafkaAvroSerializer
+      outbound-payload-topic: ${SPRING_KAFKA_PRODUCER_OUTBOUND_PAYLOAD_TOPIC:topic-req-contabil-transacao}
+      outbound-event-type: ${SPRING_KAFKA_PRODUCER_OUTBOUND_EVENT_TYPE:notify-contavirtual}
+      key-serializer:  org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        schema:
+          registry:
+            url: ${SPRING_KAFKA_PRODUCER_PROPERTIES_SCHEMA_REGISTRY_URL}
+        auto:
+          register:
+            schemas: false
+
+mac-edu:
+  kafka:
+    consumer:
+      mode: MAIN
+      support-cloud-events: false
+    producer:
+      support-cloud-events: true
+      dlq:
+        support-cloud-events: false
+    errors:
+      retry:
+        topic:
+          name: topic-conf-contavirtual-retry
+        attempts: 3
+        wait-seconds: 1
+      deadletterqueue:
+        topic:
+          name: topic-conf-contavirtual-dlq
+      tolerance:
+        level: ALL
+  avro:
+    converter:
+      mapping:
+        file: /opt/mac-edu/topic-mapping.json
+
+logging:
+  level:
+    ROOT: ${LOGGING_LEVEL_ROOT} #QA=DEBUG; STAGING=DEBUG; PROD=INFO
+    br:
+      com:
+        mac-edu: ${LOGGING_BR_COM_MACEDU} #QA=DEBUG; STAGING=DEBUG; PROD=INFO
+server:
+  port: ${SERVER_PORT}

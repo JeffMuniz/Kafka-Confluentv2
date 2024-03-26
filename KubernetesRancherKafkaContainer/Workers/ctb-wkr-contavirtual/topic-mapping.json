@@ -1,0 +1,63 @@
+[
+  {
+    "ledger": "CONTAVIRTUAL_CREDITO_PENDENTE",
+    "fieldTipoOperacao": "CREDITO",
+    "isTipoOperacaoFixo": true,
+    "tipoEvento": "CREDITO_PENDENTE",
+    "fieldCodigoEvento": "idBoleto",
+    "fieldDataEvento": "dataMovimento",
+    "fieldValor": "valor",
+    "topicPartition": 10,
+    "filters": [
+      {
+        "fieldName": "idTipoAjuste",
+        "fieldType": "long",
+        "values": [
+          1055,
+          1057,
+          1058
+        ]
+      }
+    ]
+  },
+  {
+    "ledger": "CONTAVIRTUAL_CREDITO_PENDENTE",
+    "fieldTipoOperacao": "DEBITO",
+    "isTipoOperacaoFixo": true,
+    "tipoEvento": "CREDITO_UTILIZADO",
+    "fieldCodigoEvento": "idBoleto",
+    "fieldDataEvento": "dataMovimento",
+    "fieldValor": "valor",
+    "topicPartition": 10,
+    "filters": [
+      {
+        "fieldName": "idTipoAjuste",
+        "fieldType": "long",
+        "values": [
+          1054,
+          1068
+        ]
+      }
+    ]
+  },
+  {
+    "ledger": "CONTAVIRTUAL_CREDITO_UTILIZADO",
+    "fieldTipoOperacao": "CREDITO",
+    "isTipoOperacaoFixo": true,
+    "tipoEvento": "CREDITO_UTILIZADO",
+    "fieldCodigoEvento": "idBoleto",
+    "fieldDataEvento": "dataMovimento",
+    "fieldValor": "valor",
+    "topicPartition": 11,
+    "filters": [
+      {
+        "fieldName": "idTipoAjuste",
+        "fieldType": "long",
+        "values": [
+          1054,
+          1068
+        ]
+      }
+    ]
+  }
+]

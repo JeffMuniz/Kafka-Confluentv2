@@ -1,0 +1,171 @@
+@NonCPS
+def configFromBranch(branch) {
+    def env_dev = [
+        rancherContext: 'c-dzgk5:p-v9c5t',
+        deploymentFile: 'deployment.yml',
+        namespace: 'kafka',
+        host: '',
+        replicas: 1
+    ]
+    def env_qa = [
+        rancherContext: 'c-dzgk5:p-v9c5t',
+        deploymentFile: 'deployment.yml',
+        namespace: 'kafka',
+        host: '',
+        replicas: 1
+    ]
+    def env_staging = [
+        rancherContext: 'c-dzgk5:p-v9c5t',
+        deploymentFile: 'deployment.yml',
+        namespace: 'kafka',
+        host: '',
+        replicas: 3
+    ]
+    def env_prd = [
+        rancherContext: '',
+        deploymentFile: 'deployment.yml',
+        namespace: '',
+        host: '',
+        replicas: 3
+    ]
+    if (branch ==~ /(develop)/) { 
+        return [
+            shouldTest: true,
+            shouldBuildImage: true,
+            shouldPushImage: true,
+            shouldDeploy: true,
+            env: 'develop',
+            tag: 'dev',
+            deployments: [env_dev]
+        ]
+    }
+    else if (branch ==~ /(qa)/) {
+        return [
+            shouldTest: true,
+            shouldBuildImage: true,
+            shouldPushImage: true,
+            shouldDeploy: true,
+            env: 'qa',
+            tag: 'qa',
+            deployments: [env_qa]
+        ]
+    }
+    else if (branch ==~ /(staging)/) {
+        return [
+            shouldTest: true,
+            shouldBuildImage: true,
+            shouldPushImage: true,
+            shouldDeploy: true,
+            env: 'staging',
+            tag: 'stg',
+            deployments: [env_staging]
+        ]
+    }
+    else if (branch ==~ /(master)/) {
+        return [
+            shouldTest: true,
+            shouldBuildImage: true,
+            shouldPushImage: true,
+            shouldDeploy: false,
+            env: 'production',
+            tag: 'prd',
+            deployments: [env_prd]
+        ]
+    }
+    else {
+        return [
+            shouldTest: true,
+            shouldBuildImage: false,
+            shouldPushImage: false,
+            shouldDeploy: false,
+            tag: '-',
+            deployments: []
+        ]
+    }
+}
+
+pipeline {
+    agent none
+    
+    environment {
+        CONFIG = configFromBranch(BRANCH_NAME)
+        SHOULD_TEST = "${CONFIG.shouldTest}"
+        SHOULD_BUILD_IMAGE = "${CONFIG.shouldBuildImage}"
+        SHOULD_DEPLOY = "${CONFIG.shouldDeploy}"
+        ENV = "${CONFIG.env}"
+
+        GIT_URL="https://bitbucket.org/maquiinaedu/kafka-ui/src/master/"
+        PROJECT_NAME="kafka-ui"
+
+        IMAGE_TAG = "${CONFIG.tag}-${env.BUILD_ID}"
+        IMAGE_NAME = "${PROJECT_NAME}:${IMAGE_TAG}"
+        IMAGE_URL = "123721783999.dkr.ecr.sa-east-1.amazonaws.com"
+        awsRegion = 'sa-east-1'
+        dockerTag = "${IMAGE_URL}/${IMAGE_NAME}"
+    }
+
+    stages {
+        stage ('CI') {
+            agent {
+                label 'master'
+            }
+            stages {
+                stage('SCM - Checkout') {
+                    steps{
+                        cleanWs()
+                        git branch: BRANCH_NAME,  
+                        url: GIT_URL
+                        echo 'SCM Checkout'
+                    }
+                }
+                stage ('NPM Build'){
+                    steps{
+                        sh "eval \$(ssh-agent); ssh-add ~/.ssh/id_rsa"
+                        sh "npm install"
+                        sh "npm run build:${ENV}"
+                    }
+                }
+                stage ('Test & Publish QA Reports'){
+                    when {
+                      expression { SHOULD_TEST == 'true' }
+                    }
+                    steps{
+                        echo 'Test & Publish QA Reports'
+                    }
+                }
+            }
+        }
+        stage ('CD') {
+            stages {
+                stage ('Deploy') {
+                    agent {
+                        label 'master'
+                    }
+                    stages{
+                        stage ('Docker - Build') {
+                            when {
+                              expression { SHOULD_BUILD_IMAGE == 'true' }
+                            }                  
+                            steps {
+                                withCredentials([
+                                        usernamepassingthroughportalword(
+                                        credentialsId: 'AWS',
+                                        usernameVariable: 'AWS_ACCESS_KEY_ID',
+                                        passingthroughportalwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                                    )
+                                    ]) {
+                                        sh  """
+                                            eval \$(/usr/local/bin/aws ecr get-login --no-include-email --region ${awsRegion} > /dev/null)
+                                            docker build -t ${dockerTag}-${BUILD_NUMBER} -t ${dockerTag}-latest .
+                                            docker push ${dockerTag}-${BUILD_NUMBER}
+                                            docker push ${dockerTag}-latest
+                                        """
+                                }   
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

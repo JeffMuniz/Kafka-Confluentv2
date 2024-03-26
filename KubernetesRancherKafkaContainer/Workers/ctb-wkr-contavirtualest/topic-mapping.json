@@ -1,0 +1,12 @@
+[
+  {
+    "ledger": "CONTAVIRTUAL_CREDITO_ESTORNO",
+    "fieldTipoOperacao": "CREDITO",
+    "isTipoOperacaoFixo": true,
+    "tipoEvento": "CONTAVIRTUAL_ESTORNO",
+    "fieldCodigoEvento": "idEmpresaCargaDetalheProduto",
+    "fieldDataEvento": "dataMovimento",
+    "fieldValor": "valor",
+    "topicPartition": 10
+  }
+]
